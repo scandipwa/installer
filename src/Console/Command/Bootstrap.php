@@ -215,24 +215,32 @@ EOT;
             ThemeBootstrapCommand::THEME_DIR . DIRECTORY_SEPARATOR . $this->themeName);
         $destinationPath = $this->baseWriter->getRelativePath($destinationPath) . DIRECTORY_SEPARATOR;
         $output = $this->output;
+        $sourceFilePath = '';
+        $destinationFilePath = '';
 
         foreach ($copyQueue as $key => $item) {
-            $sourceFilePath = $sourcePath . $item;
+            if (is_array($item)) {
+                $sourceFilePath = $sourcePath . $item['source'];
+                $destinationFilePath = $item['destination'];
+            } else {
+                $sourceFilePath = $sourcePath . $item;
+                $destinationFilePath = $item;
+            }
 
             if ($this->baseReader->isDirectory($sourceFilePath)) {
                 unset($copyQueue[$key]);
-                $output->writeln(sprintf('Copying DIR: <special>%s</special>', $item));
-                if ($this->copyDirectory($item, $sourceFilePath)) {
-                    $output->writeln(sprintf('Finished DIR: <special>%s</special>', $item));
+                $output->writeln(sprintf('Copying DIR: <special>%s</special>', $destinationFilePath));
+                if ($this->copyDirectory($destinationFilePath, $sourceFilePath)) {
+                    $output->writeln(sprintf('Finished DIR: <special>%s</special>', $destinationFilePath));
                     continue;
                 }
-                $output->writeln('Error copying dir: ' . $item);
+                $output->writeln('Error copying dir: ' . $destinationFilePath);
             }
 
-            $output->write('Copying <special>' . $item . '</special>');
+            $output->write('Copying <special>' . $destinationFilePath . '</special>');
             $r = $this->baseWriter->copyFile(
                 $sourceFilePath,
-                $destinationPath . $item
+                $destinationPath . $destinationFilePath
             );
 
             $output->writeln($r ? '<success> Done</success>' : '<error> Failed</error>');
