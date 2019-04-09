@@ -199,10 +199,11 @@ EOT;
 
         return $this->copyFiles($subDirQueue);
     }
-
+    
     /**
      * @param array $copyQueue
      * @return bool
+     * @throws ScandiPWABootstrapException
      * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function copyFiles(array $copyQueue): bool
@@ -210,32 +211,42 @@ EOT;
         if (count($copyQueue) < 1) {
             return false;
         }
-        $sourcePath = $this->baseReader->getRelativePath($this->sourcePath) . DIRECTORY_SEPARATOR;
-        $destinationPath = $this->appRead->getAbsolutePath(
-            ThemeBootstrapCommand::THEME_DIR . DIRECTORY_SEPARATOR . $this->themeName);
-        $destinationPath = $this->baseWriter->getRelativePath($destinationPath) . DIRECTORY_SEPARATOR;
+    
         $output = $this->output;
-
+        $sourceFolder = $this->baseReader->getRelativePath($this->sourcePath) . DIRECTORY_SEPARATOR;
+        $destinationFolder = $this->appRead->getAbsolutePath(
+            ThemeBootstrapCommand::THEME_DIR . DIRECTORY_SEPARATOR . $this->themeName);
+        $destinationFolder = $this->baseWriter->getRelativePath($destinationFolder) . DIRECTORY_SEPARATOR;
+        
         foreach ($copyQueue as $key => $item) {
-            $sourceFilePath = $sourcePath . $item;
+            if (is_array($item)) {
+                $sourceFilePath = $sourceFolder . $item['source'];
+                $destinationFilePath = $destinationFolder . $item['destination'];
+            } else {
+                $sourceFilePath = $sourceFolder . $item;
+                $destinationFilePath = $destinationFolder . $item;
+            }
 
             if ($this->baseReader->isDirectory($sourceFilePath)) {
                 unset($copyQueue[$key]);
-                $output->writeln(sprintf('Copying DIR: <special>%s</special>', $item));
+                $output->writeln(sprintf('Copying DIR: <special>%s</special>', $destinationFilePath));
+                if (is_array($item)) {
+                    throw new ScandiPWABootstrapException('Directory definition can not be array');
+                }
                 if ($this->copyDirectory($item, $sourceFilePath)) {
-                    $output->writeln(sprintf('Finished DIR: <special>%s</special>', $item));
+                    $output->writeln(sprintf('Finished DIR: <special>%s</special>', $destinationFilePath));
                     continue;
                 }
-                $output->writeln('Error copying dir: ' . $item);
+                $output->writeln('Error copying dir: ' . $destinationFilePath);
             }
 
-            $output->write('Copying <special>' . $item . '</special>');
-            $r = $this->baseWriter->copyFile(
+            $output->write('Copying <special>' . $destinationFilePath . '</special>');
+            $copyingResult = $this->baseWriter->copyFile(
                 $sourceFilePath,
-                $destinationPath . $item
+                $destinationFilePath
             );
 
-            $output->writeln($r ? '<success> Done</success>' : '<error> Failed</error>');
+            $output->writeln($copyingResult ? '<success> Done</success>' : '<error> Failed</error>');
         }
 
         return true;
