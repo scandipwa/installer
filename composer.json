@@ -24,7 +24,7 @@
     ],
     "require": {
         "magento/product-community-edition": "^2.3",
-        "scandipwa/source": "^1.0"
+        "scandipwa/source": "^1.2.1"
     },
     "autoload": {
         "files": [
