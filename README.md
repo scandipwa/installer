@@ -2,6 +2,13 @@
 
 Module is a helper to install ScandiPWA Theme.
 
+## 1.2.0 update
+Version `1.2.0` introduce changes to theme registration logic, related to URL rewrite functionality.
+
+`theme.xml` got custom `<pwa>true</pwa>` node, that is forcing custom theme type.
+In order to simply update already installed theme, update `theme` table in the database, setting up `type` = `4` for 
+your PWA theme. Cache flush is necessary once done!
+
 ## Usage
 
 `composer require scandipwa/installer`
