@@ -13,6 +13,7 @@ namespace ScandiPWA\Installer\Console\Command;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Component\ComponentRegistrar;
 use Magento\Framework\Component\ComponentRegistrarInterface;
+use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -27,42 +28,42 @@ class Bootstrap
      * @var Filesystem\Directory\ReadInterface
      */
     private $appRead;
-
+    
     /**
      * @var Filesystem\Directory\WriteInterface
      */
     private $appWrite;
-
+    
     /**
      * @var Filesystem\Directory\ReadInterface
      */
     private $baseReader;
-
+    
     /**
      * @var Filesystem\Directory\WriteInterface
      */
     private $baseWriter;
-
+    
     /**
      * @var array
      */
     private $copyQueue;
-
+    
     /**
      * @var OutputInterface
      */
     private $output;
-
+    
     /**
      * @var string|null
      */
     private $sourcePath;
-
+    
     /**
      * @var string
      */
     private $themeName;
-
+    
     const THEME_REGISTRATION_TEMPLATE = <<<EOT
 <?php
 /**
@@ -79,7 +80,7 @@ ComponentRegistrar::register(
 );
 
 EOT;
-
+    
     const THEME_XML = <<<EOT
 <?xml version="1.0"?>
 <!--
@@ -91,25 +92,25 @@ EOT;
 <theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Config/etc/theme.xsd">
     <title>{{THEME_NAME}}</title>
     <parent>Magento/blank</parent>
+    <pwa>true</pwa>
 </theme>
 
 EOT;
-
-
-
+    
+    
     /**
-     * Copy constructor.
-     *
-     * @param Filesystem $fs
+     * Bootstrap constructor.
+     * @param Filesystem                  $fs
      * @param ComponentRegistrarInterface $registrar
-     * @param array $copyQueue
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @param array                       $copyQueue
+     * @throws FileSystemException
      */
     public function __construct(
         Filesystem $fs,
         ComponentRegistrarInterface $registrar,
         array $copyQueue = []
-    ) {
+    )
+    {
         $this->copyQueue = $copyQueue;
         $this->sourcePath = $registrar->getPath(ComponentRegistrar::MODULE, ThemeBootstrapCommand::SOURCE_THEME_NAME);
         $this->appRead = $fs->getDirectoryRead(DirectoryList::APP);
@@ -117,40 +118,47 @@ EOT;
         $this->baseReader = $fs->getDirectoryRead(DirectoryList::ROOT);
         $this->baseWriter = $fs->getDirectoryWrite(DirectoryList::ROOT);
     }
-
+    
+    
     /**
-     * @param string $themeName
+     * @param string          $themeName
      * @param OutputInterface $output
      * @return int|mixed
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws ScandiPWABootstrapException
+     * @throws FileSystemException
      */
     public function copy(string $themeName, OutputInterface $output)
     {
         $this->output = $output;
         $this->themeName = $themeName;
-
+        
         $output->write('Checking prerequisite...');
         try {
             $this->validate($themeName);
         } catch (ScandiPWABootstrapException $e) {
             $output->writeln('<error> Failed</error>');
             $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
-
+            
             return $e->getCode();
         }
-
+        
         $output->writeln('<success> Done</success>');
         $output->writeln('<success>Theme not set up. Setting up...</success>');
         $output->writeln('<success>Copying files...</success>');
-
+        
         if ($this->copyFiles($this->copyQueue)) {
             return 0;
         }
-
+        
         return 1;
     }
-
-    public function generateRegistration(string $themeName)
+    
+    /**
+     * @param string $themeName
+     * @return int
+     * @throws FileSystemException
+     */
+    public function generateRegistration(string $themeName): int
     {
         $destinationPath = $this->getThemePath($themeName);
         return $this->appWrite->writeFile(
@@ -161,8 +169,13 @@ EOT;
                 self::THEME_REGISTRATION_TEMPLATE)
         );
     }
-
-    public function generateThemeXml(string $themeName)
+    
+    /**
+     * @param string $themeName
+     * @return int
+     * @throws FileSystemException
+     */
+    public function generateThemeXml(string $themeName): int
     {
         $destinationPath = $this->getThemePath($themeName);
         return $this->appWrite->writeFile(
@@ -174,18 +187,23 @@ EOT;
             )
         );
     }
-
-    protected function getThemePath($themeName)
+    
+    /**
+     * @param $themeName
+     * @return string
+     */
+    protected function getThemePath($themeName): string
     {
         return $destinationPath = $this->appRead->getAbsolutePath(
             ThemeBootstrapCommand::THEME_DIR . DIRECTORY_SEPARATOR . $themeName);
     }
-
+    
     /**
      * @param string $path
      * @param string $sourceFilePath
      * @return bool
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
+     * @throws ScandiPWABootstrapException
      */
     protected function copyDirectory(string $path, string $sourceFilePath): bool
     {
@@ -196,7 +214,7 @@ EOT;
         $subDirQueue = array_map(function ($subDirItem) use ($path) {
             return $path . $subDirItem;
         }, $directoryQueue);
-
+        
         return $this->copyFiles($subDirQueue);
     }
     
@@ -204,14 +222,14 @@ EOT;
      * @param array $copyQueue
      * @return bool
      * @throws ScandiPWABootstrapException
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     protected function copyFiles(array $copyQueue): bool
     {
         if (count($copyQueue) < 1) {
             return false;
         }
-    
+        
         $output = $this->output;
         $sourceFolder = $this->baseReader->getRelativePath($this->sourcePath) . DIRECTORY_SEPARATOR;
         $destinationFolder = $this->appRead->getAbsolutePath(
@@ -226,7 +244,7 @@ EOT;
                 $sourceFilePath = $sourceFolder . $item;
                 $destinationFilePath = $destinationFolder . $item;
             }
-
+            
             if ($this->baseReader->isDirectory($sourceFilePath)) {
                 unset($copyQueue[$key]);
                 $output->writeln(sprintf('Copying DIR: <special>%s</special>', $destinationFilePath));
@@ -239,19 +257,19 @@ EOT;
                 }
                 $output->writeln('Error copying dir: ' . $destinationFilePath);
             }
-
+            
             $output->write('Copying <special>' . $destinationFilePath . '</special>');
             $copyingResult = $this->baseWriter->copyFile(
                 $sourceFilePath,
                 $destinationFilePath
             );
-
+            
             $output->writeln($copyingResult ? '<success> Done</success>' : '<error> Failed</error>');
         }
-
+        
         return true;
     }
-
+    
     /**
      * @param string $directory
      * @return array
@@ -265,10 +283,10 @@ EOT;
         $dirFiles = array_filter($dirList, function ($item) {
             return ($item !== '.' && $item !== '..');
         });
-
+        
         return $dirFiles;
     }
-
+    
     /**
      * @param $themeName
      * @return bool
@@ -281,10 +299,10 @@ EOT;
                 'Theme already present. Please choose another name or remove manually',
                 97);
         }
-
+        
         return true;
     }
-
+    
     /**
      * @return bool
      * @throws ScandiPWABootstrapException
@@ -296,10 +314,10 @@ EOT;
                 'Sources are missing, have you installed the source package?',
                 98);
         }
-
+        
         return true;
     }
-
+    
     /**
      * @param $themeName
      * @return bool

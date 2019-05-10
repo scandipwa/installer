@@ -20,6 +20,10 @@
             </argument>
         </arguments>
     </type>
+    <preference for="Magento\Framework\View\Design\Theme\Validator" type="ScandiPWA\Installer\Theme\Validator"></preference>
+    <preference for="Magento\Framework\Config\Theme" type="ScandiPWA\Installer\Theme\Config"></preference>
+    <preference for="Magento\Theme\Model\Theme\Data\Collection" type="ScandiPWA\Installer\Theme\ThemeList"></preference>
+    <preference for="Magento\Theme\Model\Theme\Registration" type="ScandiPWA\Installer\Theme\Registration"></preference>
     <virtualType name="ConfirmationQuestionFactory" type="Symfony\Component\Console\Question\QuestionFactory">
         <arguments>
             <argument name="instanceName" xsi:type="string">
