@@ -22,6 +22,11 @@ After installation flush the caches (Varnish or filesystem).
 
 Command accepts single parameter, which is treated as following format: "Vendor/theme".
 
+**Note**
+
+*You can change `Scandiweb/pwa` in examples below to anything suitable for you, keeping the same naming structure: 
+`Vendor/theme_name`*
+
 After `php bin/magento scandipwa:theme:bootstrap Scandiweb/pwa` it will make next effect:
 1. Check for `<magento_root>/app/design/frontend/Scandiweb/pwa` - bootstrap will quite with error if directory is present to prevent unwanted overrides.
 2. Create `<magento_root>/app/design/frontend/Scandiweb/pwa` directory
@@ -31,18 +36,13 @@ After `php bin/magento scandipwa:theme:bootstrap Scandiweb/pwa` it will make nex
 5. Run `php bin/magento setup:upgrade`.
 6. You are bootstraped!
 
-## Package re-usage
-If you ever need a similar bootstrap and "magento-extra" section within composer.json is not enough - here is a short
- summary of module logic and customization, so feel free to re-use it!
- 
- ### Package goal
- Package goal is ensure simple theme bootstrap, by copying specific files, keeping the file structure.
- Apart of it - it must be interactive at some sort, to give you ability to generate more then one theme, without 
- additional configuration.
- 
-#### In order to achieve this, package provides:
- - Magento 2 CLI command
- - File copying logic (adding directory recursive copy)
- 
- #### Customization
- In order to customize copying task - simply edit `di.xml`, passing array with paths.
+### Theme build
+The theme must be built after it is bootstrap or after any changes.
+
+1. Go to `app/design/frontend/Scandiweb/pwa` (or your custom `Vendor/theme_name`)
+2. run `npm ci`
+3. run `npm run build`
+
+
+#### Customization
+In order to customize copying task - simply edit `di.xml`, passing array with paths.
