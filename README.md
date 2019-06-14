@@ -1,4 +1,6 @@
 # ScandiPWA installer
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fscandipwa%2Finstaller.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fscandipwa%2Finstaller?ref=badge_shield)
+
 
 Module is a helper to install ScandiPWA Theme.
 
@@ -46,3 +48,6 @@ The theme must be built after it is bootstrap or after any changes.
 
 #### Customization
 In order to customize copying task - simply edit `di.xml`, passing array with paths.
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fscandipwa%2Finstaller.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fscandipwa%2Finstaller?ref=badge_large)
