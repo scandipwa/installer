@@ -1,7 +1,12 @@
 <?php
 /**
- * @author    Raivis Dejus <info@scandiweb.com>
- * @copyright Copyright (c) 2018 Scandiweb, Ltd (https://scandiweb.com)
+ * ScandiPWA_Installer
+ *
+ * @category    ScandiPWA
+ * @package     ScandiPWA_Installer
+ * @author      Ilja Lapkovskis <ilja@scandiweb.com | info@scandiweb.com>
+ * @copyright   Copyright (c) 2019 Scandiweb, Ltd (https://scandiweb.com)
+ * @license     OSL-3.0
  */
 
 use \Magento\Framework\Component\ComponentRegistrar;

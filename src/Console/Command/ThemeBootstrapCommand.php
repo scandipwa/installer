@@ -1,10 +1,10 @@
 <?php
 /**
- * @category ScandiPWA
- * @package ScandiPWA\Installer
- * @author Ilja Lapkovskis <info@scandiweb.com / ilja@scandiweb.com>
+ * @category  ScandiPWA
+ * @package   ScandiPWA\Installer
+ * @author    Ilja Lapkovskis <info@scandiweb.com / ilja@scandiweb.com>
  * @copyright Copyright (c) 2019 Scandiweb, Ltd (http://scandiweb.com)
- * @license Apache-2.0
+ * @license   OSL-3.0
  */
 
 
@@ -28,26 +28,26 @@ use Symfony\Component\Console\Question\QuestionFactory;
 class ThemeBootstrapCommand extends Command
 {
     const THEME_DIR = 'design/frontend';
-
+    
     const SECTION = 'frontend';
-
+    
     const SOURCE_THEME_NAME = 'ScandiPWA_Source';
-
+    
     /**
      * @var Bootstrap
      */
     private $bootstrap;
-
+    
     /**
      * @var QuestionFactory
      */
     private $question;
-
+    
     /**
      * ThemeBootstrap constructor.
      *
      * @param Filesystem $fs
-     * @param null $name
+     * @param null       $name
      */
     public function __construct(Bootstrap $bootstrap, QuestionFactory $question, $name = null)
     {
@@ -55,21 +55,21 @@ class ThemeBootstrapCommand extends Command
         $this->bootstrap = $bootstrap;
         $this->question = $question;
     }
-
+    
     /**
      * Define Symfony\Console compatible command
      */
     protected function configure()
     {
         $this->setName('scandipwa:theme:bootstrap')
-             ->setDescription('Bootstraps ScandiPWA theme')
-             ->addArgument('name', InputArgument::REQUIRED, 'Put the theme name you want to create');
-
+            ->setDescription('Bootstraps ScandiPWA theme')
+            ->addArgument('name', InputArgument::REQUIRED, 'Put the theme name you want to create');
+        
         parent::configure();
     }
-
+    
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      * @return int|null
      */
@@ -77,7 +77,7 @@ class ThemeBootstrapCommand extends Command
     {
         $this->prepareOutput($output);
         $themeName = $input->getArgument('name');
-
+        
         // On success return 0, as these are EXIT codes
         $copyCode = $this->bootstrap->copy($themeName, $output);
         if ($copyCode) {
@@ -93,17 +93,17 @@ class ThemeBootstrapCommand extends Command
             $generateRegistarion = $questionHelper->ask($input, $output, $question);
             if (!$generateRegistarion) {
                 $output->writeln('<success> You\'re done! </success>');
-
+                
                 return 0;
             }
         }
-
-
+        
+        
         return $this->generateThemeFiles($themeName, $output);
     }
-
+    
     /**
-     * @param string $themeName
+     * @param string          $themeName
      * @param OutputInterface $output
      * @return int
      */
@@ -115,13 +115,13 @@ class ThemeBootstrapCommand extends Command
             $output->writeln('<error>Failed to generate files</error>');
             return 9;
         }
-
+        
         $output->writeln('<success>ScandiPWA new theme bootstrap done! Happy coding!</success>');
         $output->writeln('<warn>Please run setup:upgrade from Magento CLI</warn>');
-
+        
         return 0;
     }
-
+    
     /**
      * @param OutputInterface $output
      * @return OutputInterface
@@ -136,7 +136,7 @@ class ThemeBootstrapCommand extends Command
         $output->getFormatter()->setStyle('warn', $warn);
         $output->getFormatter()->setStyle('success', $success);
         $output->getFormatter()->setStyle('special', $special);
-
+        
         return $output;
     }
 }

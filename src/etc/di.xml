@@ -6,6 +6,7 @@
  * @copyright Copyright (c) 2019 Scandiweb, Ltd (http://scandiweb.com)
  * @license Apache-2.0
 -->
+
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\Framework\Console\CommandList">
@@ -20,10 +21,22 @@
             </argument>
         </arguments>
     </type>
-    <preference for="Magento\Framework\View\Design\Theme\Validator" type="ScandiPWA\Installer\Theme\Validator"></preference>
-    <preference for="Magento\Framework\Config\Theme" type="ScandiPWA\Installer\Theme\Config"></preference>
-    <preference for="Magento\Theme\Model\Theme\Data\Collection" type="ScandiPWA\Installer\Theme\ThemeList"></preference>
-    <preference for="Magento\Theme\Model\Theme\Registration" type="ScandiPWA\Installer\Theme\Registration"></preference>
+    <preference for="Magento\Framework\View\Design\Theme\Validator" type="ScandiPWA\Installer\Theme\Validator"/>
+    <preference for="Magento\Framework\Config\Theme" type="ScandiPWA\Installer\Theme\Config"/>
+    <preference for="Magento\Theme\Model\Theme\Data\Collection" type="ScandiPWA\Installer\Theme\ThemeList"/>
+    <preference for="Magento\Theme\Model\Theme\Registration" type="ScandiPWA\Installer\Theme\Registration"/>
+    <preference for="Magento\Theme\Ui\Component\Theme\DataProvider\SearchResult"
+                type="ScandiPWA\Installer\Theme\Ui\Component\DataProvider\SearchResult"/>
+    <type name="Magento\Theme\Model\ResourceModel\Theme\Collection">
+        <plugin name="ScandiPWA_Collection_Plugin" type="ScandiPWA\Installer\Theme\Plugin\CollectionPlugin"/>
+    </type>
+    <type name="ScandiPWA\Installer\Theme\Ui\Component\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">theme</argument>
+            <argument name="resourceModel" xsi:type="string">Magento\Theme\Model\ResourceModel\Theme</argument>
+            <argument name="identifierName" xsi:type="string">theme_id</argument>
+        </arguments>
+    </type>
     <virtualType name="ConfirmationQuestionFactory" type="Symfony\Component\Console\Question\QuestionFactory">
         <arguments>
             <argument name="instanceName" xsi:type="string">

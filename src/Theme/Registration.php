@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * ScandiPWA_Installer
+ *
+ * @category    ScandiPWA
+ * @package     ScandiPWA_Installer
+ * @author      Ilja Lapkovskis <ilja@scandiweb.com | info@scandiweb.com>
+ * @copyright   Copyright (c) 2019 Scandiweb, Ltd (https://scandiweb.com)
+ * @license     OSL-3.0
+ */
 
 namespace ScandiPWA\Installer\Theme;
 
@@ -16,7 +24,7 @@ class Registration extends MagentoRegistration
      * Second param is optional and is used to prevent circular references in inheritance chain
      *
      * @param ThemeInterface &$theme
-     * @param array $inheritanceChain
+     * @param array           $inheritanceChain
      * @return \Magento\Theme\Model\Theme\Registration
      * @throws LocalizedException
      */
