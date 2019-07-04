@@ -45,6 +45,12 @@ The theme must be built after it is bootstrap or after any changes.
 2. run `npm ci`
 3. run `npm run build`
 
+### DEMO installation
+
+If you'd like to get the same result as [v1.scandipwa.com](https://v1.scandipwa.com) you must import database 
+[dump](https://github.com/scandipwa/scandipwa-base/raw/master/deploy/latest.sql) and get 
+[media](https://s3-eu-west-1.amazonaws.com/scandipwa-public-assets/scandipwa_media.tgz)
+
 
 #### Customization
 In order to customize copying task - simply edit `di.xml`, passing array with paths.
