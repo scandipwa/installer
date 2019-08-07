@@ -62,6 +62,7 @@
                 <item name="5" xsi:type="string">src/public/</item>
                 <item name="6" xsi:type="string">src/app/style/main.scss</item>
                 <item name="7" xsi:type="string">package-lock.json</item>
+                <item name="8" xsi:type="string">process.yml</item>
             </argument>
         </arguments>
     </type>
