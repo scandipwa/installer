@@ -55,14 +55,14 @@
                 <item name="1" xsi:type="string">package.json</item>
                 <item name="2" xsi:type="string">src/config/</item>
                 <item name="3" xsi:type="string">src/public/</item>
-                <item name="3" xsi:type="string">i18n/</item>
-                <item name="4" xsi:type="string">package-lock.json</item>
-                <item name="5" xsi:type="array">
+                <item name="4" xsi:type="string">i18n/</item>
+                <item name="5" xsi:type="string">package-lock.json</item>
+                <item name="6" xsi:type="array">
                     <item name="source" xsi:type="string">.eslintrc</item>
                     <item name="destination" xsi:type="string">.eslintrc.sample</item>
                 </item>
-                <item name="6" xsi:type="string">process.yml</item>
-                <item name="7" xsi:type="string">jsconfig.json</item>
+                <item name="7" xsi:type="string">process.yml</item>
+                <item name="8" xsi:type="string">jsconfig.json</item>
             </argument>
         </arguments>
     </type>
