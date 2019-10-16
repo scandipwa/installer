@@ -55,6 +55,7 @@
                 <item name="1" xsi:type="string">package.json</item>
                 <item name="2" xsi:type="string">src/config/</item>
                 <item name="3" xsi:type="string">src/public/</item>
+                <item name="3" xsi:type="string">i18n/</item>
                 <item name="4" xsi:type="string">package-lock.json</item>
                 <item name="5" xsi:type="array">
                     <item name="source" xsi:type="string">.eslintrc</item>
