@@ -63,6 +63,7 @@
                 </item>
                 <item name="7" xsi:type="string">process.yml</item>
                 <item name="8" xsi:type="string">jsconfig.json</item>
+                <item name="9" xsi:type="string">etc/view.xml</item>
             </argument>
         </arguments>
     </type>
