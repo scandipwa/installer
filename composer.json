@@ -28,6 +28,7 @@
     },
     "autoload": {
         "files": [
+            "src/cli_commands.php",
             "src/registration.php"
         ],
         "psr-4": {

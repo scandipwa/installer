@@ -102,21 +102,41 @@ EOT;
      * Bootstrap constructor.
      * @param Filesystem                  $fs
      * @param ComponentRegistrarInterface $registrar
-     * @param array                       $copyQueue
      * @throws FileSystemException
      */
     public function __construct(
         Filesystem $fs,
-        ComponentRegistrarInterface $registrar,
-        array $copyQueue = []
+        ComponentRegistrarInterface $registrar
     )
     {
-        $this->copyQueue = $copyQueue;
+        $this->copyQueue = $this->getCopyQueue();
         $this->sourcePath = $registrar->getPath(ComponentRegistrar::MODULE, ThemeBootstrapCommand::SOURCE_THEME_NAME);
         $this->appRead = $fs->getDirectoryRead(DirectoryList::APP);
         $this->appWrite = $fs->getDirectoryWrite(DirectoryList::APP);
         $this->baseReader = $fs->getDirectoryRead(DirectoryList::ROOT);
         $this->baseWriter = $fs->getDirectoryWrite(DirectoryList::ROOT);
+    }
+    
+    /**
+     * @return string[]
+     */
+    private function getCopyQueue(): array
+    {
+        return [
+            "package.json",
+            "package-lock.json",
+            "src/config/",
+            "src/public/",
+            "i18n/",
+            [
+                "source" => ".eslintrc",
+                "destination" => ".eslintrc.sample"
+            ],
+            "process.yml",
+            "jsconfig.json",
+            "etc/view.xml",
+            "media/"
+        ];
     }
     
     

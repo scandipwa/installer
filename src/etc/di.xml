@@ -9,18 +9,6 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\Framework\Console\CommandList">
-        <arguments>
-            <argument
-                    name="commands"
-                    xsi:type="array">
-                <item name="scandiweb_pwa_bootstrap"
-                      xsi:type="object">
-                    ScandiPWA\Installer\Console\Command\ThemeBootstrapCommand
-                </item>
-            </argument>
-        </arguments>
-    </type>
     <preference for="Magento\Framework\View\Design\Theme\Validator" type="ScandiPWA\Installer\Theme\Validator"/>
     <preference for="Magento\Framework\Config\Theme" type="ScandiPWA\Installer\Theme\Config"/>
     <preference for="Magento\Theme\Model\Theme\Data\Collection" type="ScandiPWA\Installer\Theme\ThemeList"/>
@@ -35,37 +23,6 @@
             <argument name="mainTable" xsi:type="string">theme</argument>
             <argument name="resourceModel" xsi:type="string">Magento\Theme\Model\ResourceModel\Theme</argument>
             <argument name="identifierName" xsi:type="string">theme_id</argument>
-        </arguments>
-    </type>
-    <virtualType name="ConfirmationQuestionFactory" type="Symfony\Component\Console\Question\QuestionFactory">
-        <arguments>
-            <argument name="instanceName" xsi:type="string">
-                Symfony\Component\Console\Question\ConfirmationQuestion
-            </argument>
-        </arguments>
-    </virtualType>
-    <type name="ScandiPWA\Installer\Console\Command\ThemeBootstrap">
-        <arguments>
-            <argument name="question" xsi:type="object">ConfirmationQuestionFactory</argument>
-        </arguments>
-    </type>
-    <type name="ScandiPWA\Installer\Console\Command\Bootstrap">
-        <arguments>
-            <argument name="copyQueue" xsi:type="array">
-                <item name="1" xsi:type="string">package.json</item>
-                <item name="2" xsi:type="string">src/config/</item>
-                <item name="3" xsi:type="string">src/public/</item>
-                <item name="4" xsi:type="string">i18n/</item>
-                <item name="5" xsi:type="string">package-lock.json</item>
-                <item name="6" xsi:type="array">
-                    <item name="source" xsi:type="string">.eslintrc</item>
-                    <item name="destination" xsi:type="string">.eslintrc.sample</item>
-                </item>
-                <item name="7" xsi:type="string">process.yml</item>
-                <item name="8" xsi:type="string">jsconfig.json</item>
-                <item name="9" xsi:type="string">etc/view.xml</item>
-                <item name="10" xsi:type="string">media/</item>
-            </argument>
         </arguments>
     </type>
 </config>

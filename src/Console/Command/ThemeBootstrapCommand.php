@@ -117,7 +117,9 @@ class ThemeBootstrapCommand extends Command
         }
         
         $output->writeln('<success>ScandiPWA new theme bootstrap done! Happy coding!</success>');
-        $output->writeln('<warn>Please run setup:upgrade from Magento CLI</warn>');
+        $output->writeln(sprintf('<warn>Now you can build the theme</warn>: cd app/design/frontend/%s && npm ci && npm run build',
+            $themeName));
+        $output->writeln('<info>Read the docs: https://docs.scandipwa.com</info>');
         
         return 0;
     }
