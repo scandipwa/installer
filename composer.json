@@ -24,7 +24,7 @@
     ],
     "require": {
         "magento/magento2-base": "^2.3.3",
-        "scandipwa/source": "^2.7.2"
+        "scandipwa/source": "^3.0.0"
     },
     "autoload": {
         "files": [
