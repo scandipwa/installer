@@ -28,42 +28,42 @@ class Bootstrap
      * @var Filesystem\Directory\ReadInterface
      */
     private $appRead;
-    
+
     /**
      * @var Filesystem\Directory\WriteInterface
      */
     private $appWrite;
-    
+
     /**
      * @var Filesystem\Directory\ReadInterface
      */
     private $baseReader;
-    
+
     /**
      * @var Filesystem\Directory\WriteInterface
      */
     private $baseWriter;
-    
+
     /**
      * @var array
      */
     private $copyQueue;
-    
+
     /**
      * @var OutputInterface
      */
     private $output;
-    
+
     /**
      * @var string|null
      */
     private $sourcePath;
-    
+
     /**
      * @var string
      */
     private $themeName;
-    
+
     const THEME_REGISTRATION_TEMPLATE = <<<EOT
 <?php
 /**
@@ -80,7 +80,7 @@ ComponentRegistrar::register(
 );
 
 EOT;
-    
+
     const THEME_XML = <<<EOT
 <?xml version="1.0"?>
 <!--
@@ -96,8 +96,8 @@ EOT;
 </theme>
 
 EOT;
-    
-    
+
+
     /**
      * Bootstrap constructor.
      * @param Filesystem                  $fs
@@ -116,7 +116,7 @@ EOT;
         $this->baseReader = $fs->getDirectoryRead(DirectoryList::ROOT);
         $this->baseWriter = $fs->getDirectoryWrite(DirectoryList::ROOT);
     }
-    
+
     /**
      * @return string[]
      */
@@ -125,6 +125,7 @@ EOT;
         return [
             "package.json",
             "package-lock.json",
+            "scandipwa.json",
             "src/config/",
             "src/public/",
             "i18n/",
@@ -138,8 +139,8 @@ EOT;
             "media/"
         ];
     }
-    
-    
+
+
     /**
      * @param string          $themeName
      * @param OutputInterface $output
@@ -151,28 +152,28 @@ EOT;
     {
         $this->output = $output;
         $this->themeName = $themeName;
-        
+
         $output->write('Checking prerequisite...');
         try {
             $this->validate($themeName);
         } catch (ScandiPWABootstrapException $e) {
             $output->writeln('<error> Failed</error>');
             $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
-            
+
             return $e->getCode();
         }
-        
+
         $output->writeln('<success> Done</success>');
         $output->writeln('<success>Theme not set up. Setting up...</success>');
         $output->writeln('<success>Copying files...</success>');
-        
+
         if ($this->copyFiles($this->copyQueue)) {
             return 0;
         }
-        
+
         return 1;
     }
-    
+
     /**
      * @param string $themeName
      * @return int
@@ -189,7 +190,7 @@ EOT;
                 self::THEME_REGISTRATION_TEMPLATE)
         );
     }
-    
+
     /**
      * @param string $themeName
      * @return int
@@ -207,7 +208,7 @@ EOT;
             )
         );
     }
-    
+
     /**
      * @param $themeName
      * @return string
@@ -217,7 +218,7 @@ EOT;
         return $destinationPath = $this->appRead->getAbsolutePath(
             ThemeBootstrapCommand::THEME_DIR . DIRECTORY_SEPARATOR . $themeName);
     }
-    
+
     /**
      * @param string $path
      * @param string $sourceFilePath
@@ -234,10 +235,10 @@ EOT;
         $subDirQueue = array_map(function ($subDirItem) use ($path) {
             return $path . $subDirItem;
         }, $directoryQueue);
-        
+
         return $this->copyFiles($subDirQueue);
     }
-    
+
     /**
      * @param array $copyQueue
      * @return bool
@@ -249,13 +250,13 @@ EOT;
         if (count($copyQueue) < 1) {
             return false;
         }
-        
+
         $output = $this->output;
         $sourceFolder = $this->baseReader->getRelativePath($this->sourcePath) . DIRECTORY_SEPARATOR;
         $destinationFolder = $this->appRead->getAbsolutePath(
             ThemeBootstrapCommand::THEME_DIR . DIRECTORY_SEPARATOR . $this->themeName);
         $destinationFolder = $this->baseWriter->getRelativePath($destinationFolder) . DIRECTORY_SEPARATOR;
-        
+
         foreach ($copyQueue as $key => $item) {
             if (is_array($item)) {
                 $sourceFilePath = $sourceFolder . $item['source'];
@@ -264,7 +265,7 @@ EOT;
                 $sourceFilePath = $sourceFolder . $item;
                 $destinationFilePath = $destinationFolder . $item;
             }
-            
+
             if ($this->baseReader->isDirectory($sourceFilePath)) {
                 unset($copyQueue[$key]);
                 $output->writeln(sprintf('Copying DIR: <special>%s</special>', $destinationFilePath));
@@ -277,19 +278,19 @@ EOT;
                 }
                 $output->writeln('Error copying dir: ' . $destinationFilePath);
             }
-            
+
             $output->write('Copying <special>' . $destinationFilePath . '</special>');
             $copyingResult = $this->baseWriter->copyFile(
                 $sourceFilePath,
                 $destinationFilePath
             );
-            
+
             $output->writeln($copyingResult ? '<success> Done</success>' : '<error> Failed</error>');
         }
-        
+
         return true;
     }
-    
+
     /**
      * @param string $directory
      * @return array
@@ -303,10 +304,10 @@ EOT;
         $dirFiles = array_filter($dirList, function ($item) {
             return ($item !== '.' && $item !== '..');
         });
-        
+
         return $dirFiles;
     }
-    
+
     /**
      * @param $themeName
      * @return bool
@@ -319,10 +320,10 @@ EOT;
                 'Theme already present. Please choose another name or remove manually',
                 97);
         }
-        
+
         return true;
     }
-    
+
     /**
      * @return bool
      * @throws ScandiPWABootstrapException
@@ -334,10 +335,10 @@ EOT;
                 'Sources are missing, have you installed the source package?',
                 98);
         }
-        
+
         return true;
     }
-    
+
     /**
      * @param $themeName
      * @return bool
