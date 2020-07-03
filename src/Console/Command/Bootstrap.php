@@ -136,7 +136,8 @@ EOT;
             "process.yml",
             "jsconfig.json",
             "etc/view.xml",
-            "media/"
+            "media/",
+            ".npmrc"
         ];
     }
 
