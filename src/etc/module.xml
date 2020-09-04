@@ -1,11 +1,15 @@
+<?xml version="1.0"?>
 <!--
  * @category Scandiweb
  * @package ScandiPWA\Installer
  * @author Ilja Lapkovskis <info@scandiweb.com / ilja@scandiweb.com>
  * @copyright Copyright (c) 2019 Scandiweb, Ltd (http://scandiweb.com)
- * @license Apache-2.0
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/Module/etc/module.xsd">
-    <module name="ScandiPWA_Installer" setup_version="0.0.1" >
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="ScandiPWA_Installer">
+        <sequence>
+            <module name="Magento_Theme" />
+        </sequence>
     </module>
 </config>
