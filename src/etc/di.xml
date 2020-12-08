@@ -20,6 +20,9 @@
     <type name="Magento\Theme\Model\ResourceModel\Theme\Collection">
         <plugin name="ScandiPWA_Collection_Plugin" type="ScandiPWA\Installer\Theme\Plugin\CollectionPlugin"/>
     </type>
+    <type name="Magento\Theme\Model\Theme">
+        <plugin name="ScandiPWA_Theme_Plugin" type="ScandiPWA\Installer\Theme\Plugin\ThemePlugin"/>
+    </type>
     <type name="ScandiPWA\Installer\Theme\Ui\Component\DataProvider\SearchResult">
         <arguments>
             <argument name="mainTable" xsi:type="string">theme</argument>

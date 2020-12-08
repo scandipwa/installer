@@ -7,12 +7,10 @@
     ],
     "require": {
         "magento/framework": "*",
-        "magento/module-theme": "*",
-        "scandipwa/source": "^3"
+        "magento/module-theme": "*"
     },
     "autoload": {
         "files": [
-            "src/cli_commands.php",
             "src/registration.php"
         ],
         "psr-4": {

@@ -11,7 +11,6 @@
 
 namespace ScandiPWA\Installer\Theme;
 
-
 use Magento\Framework\View\Design\ThemeInterface as MagentoThemeInterface;
 
 interface ThemeInterface extends MagentoThemeInterface
