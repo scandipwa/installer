@@ -13,6 +13,8 @@ namespace ScandiPWA\Installer\Theme;
 
 
 use Magento\Framework\View\Design\Theme\Validator as MagentoValidator;
+use Laminas\Validator\NotEmpty;
+use Laminas\Validator\InArray;
 
 class Validator extends MagentoValidator
 {
@@ -21,14 +23,14 @@ class Validator extends MagentoValidator
         $typeValidators = [
             [
                 'name' => 'not_empty',
-                'class' => 'Zend_Validate_NotEmpty',
+                'class' => NotEmpty::class,
                 'break' => true,
                 'options' => [],
                 'message' => (string)new \Magento\Framework\Phrase('Theme type can\'t be empty'),
             ],
             [
                 'name' => 'available',
-                'class' => 'Zend_Validate_InArray',
+                'class' => InArray::class,
                 'break' => true,
                 'options' => [
                     'haystack' => [
@@ -41,9 +43,9 @@ class Validator extends MagentoValidator
                 'message' => (string)new \Magento\Framework\Phrase('Theme type is invalid')
             ],
         ];
-        
+
         $this->addDataValidators('type', $typeValidators);
-        
+
         return $this;
     }
 }
